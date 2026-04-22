@@ -152,15 +152,19 @@ export function renderHome(data, { slug, lang }) {
       return;
     }
     const tok = ++swapToken;
+    // expose the incoming image to the ::after reveal layer.
+    // CSS url() resolves relative to the STYLESHEET (/css/...), not the
+    // document, so we pass an absolute URL so the reveal layer actually
+    // loads the image instead of 404-ing and staying black.
+    const absSrc = new URL(newSrc, document.baseURI).href;
+    mirillaEl.style.setProperty("--next-img", `url("${absSrc}")`);
     mirillaEl.classList.add("is-swapping");
-    // swap src at the midpoint, while the iris fully covers the image
+    // at the end, adopt the new src on the main img and reset
     setTimeout(() => {
       if (tok !== swapToken) return;
       mirillaImg.src = newSrc;
-    }, SWAP_TOTAL_MS / 2);
-    setTimeout(() => {
-      if (tok !== swapToken) return;
       mirillaEl.classList.remove("is-swapping");
+      mirillaEl.style.removeProperty("--next-img");
     }, SWAP_TOTAL_MS);
   }
 

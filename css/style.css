@@ -136,8 +136,14 @@ ul { margin: 0; padding: 0; list-style: none; }
   height: 100%;
   object-fit: cover;
 }
-/* iris overlay — a black disc that pulses from the centre during a swap.
-   Keyframes: 0% closed, 50% fully covering the visible mirilla, 100% closed. */
+/* Mirilla swap — two sequential OPENINGS (no closing):
+   1) a black iris grows from the centre out, covering the old image;
+   2) on top, the new image is revealed by a circle that also grows
+      from the centre out. Meanwhile the whole mirilla spins.
+   The ::after reveal layer only exists while .is-swapping, so the
+   resting-state mirilla stays clean (important for the page
+   view-transition snapshot — otherwise an invisible pseudo-element
+   can make the morph look broken). */
 .mirilla__iris {
   position: absolute;
   inset: 0;
@@ -145,16 +151,41 @@ ul { margin: 0; padding: 0; list-style: none; }
   pointer-events: none;
   clip-path: circle(0% at 50% 50%);
 }
-.mirilla.is-swapping .mirilla__iris {
-  animation: iris-pulse 700ms var(--ease) forwards;
+.mirilla.is-swapping::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--next-img, none);
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+  clip-path: circle(0% at 50% 50%);
+  animation: iris-reveal 700ms var(--ease) forwards;
 }
-@keyframes iris-pulse {
+.mirilla.is-swapping {
+  animation: mirilla-spin 700ms var(--ease);
+}
+.mirilla.is-swapping .mirilla__iris {
+  animation: iris-cover 700ms var(--ease) forwards;
+}
+@keyframes iris-cover {
   0%   { clip-path: circle(0% at 50% 50%); }
-  50%  { clip-path: circle(55% at 50% 50%); }
-  100% { clip-path: circle(0% at 50% 50%); }
+  50%  { clip-path: circle(75% at 50% 50%); }
+  100% { clip-path: circle(75% at 50% 50%); }
+}
+@keyframes iris-reveal {
+  0%   { clip-path: circle(0% at 50% 50%); }
+  50%  { clip-path: circle(0% at 50% 50%); }
+  100% { clip-path: circle(75% at 50% 50%); }
+}
+@keyframes mirilla-spin {
+  from { rotate: 0deg; }
+  to   { rotate: 360deg; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .mirilla.is-swapping .mirilla__iris { animation-duration: 1ms; }
+  .mirilla.is-swapping,
+  .mirilla.is-swapping .mirilla__iris,
+  .mirilla.is-swapping::after { animation-duration: 1ms; }
 }
 
 /* ---- side (cloud + texts) ---- */
