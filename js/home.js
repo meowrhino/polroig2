@@ -10,7 +10,7 @@ import { applyTranslations, projectHash, homeHash, pickLang } from "./i18n.js";
 
 const carpetaOf = (p) => p.carpeta || p.slug;
 
-const SWAP_TOTAL_MS = 700;
+const SWAP_TOTAL_MS = 1100;
 
 function placeWithoutOverlap(w, h, rects) {
   const maxTries = 40;

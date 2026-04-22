@@ -9,6 +9,8 @@
   --accent: #f00;
   --muted: #ccc;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --swap-dur: 1100ms;
 
   --header-h: 3.25rem;
 
@@ -160,23 +162,17 @@ ul { margin: 0; padding: 0; list-style: none; }
   background-position: center;
   pointer-events: none;
   clip-path: circle(0% at 50% 50%);
-  animation: iris-reveal 700ms var(--ease) forwards;
+  animation: iris-grow 950ms 150ms var(--ease-soft) forwards;
 }
 .mirilla.is-swapping {
-  animation: mirilla-spin 700ms var(--ease);
+  animation: mirilla-spin var(--swap-dur) var(--ease-soft);
 }
 .mirilla.is-swapping .mirilla__iris {
-  animation: iris-cover 700ms var(--ease) forwards;
+  animation: iris-grow 950ms var(--ease-soft) forwards;
 }
-@keyframes iris-cover {
-  0%   { clip-path: circle(0% at 50% 50%); }
-  50%  { clip-path: circle(75% at 50% 50%); }
-  100% { clip-path: circle(75% at 50% 50%); }
-}
-@keyframes iris-reveal {
-  0%   { clip-path: circle(0% at 50% 50%); }
-  50%  { clip-path: circle(0% at 50% 50%); }
-  100% { clip-path: circle(75% at 50% 50%); }
+@keyframes iris-grow {
+  from { clip-path: circle(0% at 50% 50%); }
+  to   { clip-path: circle(75% at 50% 50%); }
 }
 @keyframes mirilla-spin {
   from { rotate: 0deg; }
@@ -306,6 +302,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-size: 0.9rem;
 }
 .proyecto__mirilla {
+  position: relative;
   width: 80%;
   max-width: 360px;
   aspect-ratio: 1 / 1;
